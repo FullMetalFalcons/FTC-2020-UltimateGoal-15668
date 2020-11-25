@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -20,6 +23,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.*;
 public class testbot extends LinearOpMode {
 
     public void runOpMode() {
+        Gyroscope imu = hardwareMap.get(Gyroscope.class, "imu");
+        DigitalChannel digitalTouch = hardwareMap.get(DigitalChannel.class, "digitalTouch");
+        DistanceSensor sensorColorRange = hardwareMap.get(DistanceSensor.class, "sensorColorRange");
         DcMotor m1 = hardwareMap.dcMotor.get("back_left_motor");
         DcMotor m2 = hardwareMap.dcMotor.get("front_left_motor");
         DcMotor m3 = hardwareMap.dcMotor.get("front_right_motor");
@@ -32,8 +38,14 @@ public class testbot extends LinearOpMode {
         DcMotor m10 = hardwareMap.dcMotor.get("10");
         DcMotor m11 = hardwareMap.dcMotor.get("11");
 
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
         waitForStart();
         while (opModeIsActive()){
+
+            telemetry.addData("Status", "Running");
+            telemetry.update();
 
             double px = gamepad1.left_stick_x;
             if (Math.abs(px) < 0.05) px = 0;
