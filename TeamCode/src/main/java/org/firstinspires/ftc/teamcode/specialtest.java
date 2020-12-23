@@ -42,6 +42,11 @@ public class specialtest extends LinearOpMode {
             double px = gamepad1.left_stick_x;
             double py = -gamepad1.left_stick_y;
             double pa = -gamepad1.right_stick_x;
+            boolean halfp;
+            double m1p;
+            double m2p;
+            double m3p;
+            double m4p;
             if (Math.abs(pa) < 0.05) pa = 0;
             double p1 = -px + py - pa;
             double p2 = px + py + -pa;
@@ -55,10 +60,26 @@ public class specialtest extends LinearOpMode {
             p2 /= max;
             p3 /= max;
             p4 /= max;
-            m1.setPower(p1);
-            m2.setPower(p2);
-            m3.setPower(p3);
-            m4.setPower(p4);
+            if (gamepad1.left_stick_button == true || gamepad1.right_stick_button == true) {
+                halfp = true;
+            } else {
+                halfp = false;
+            }
+            if (halfp == true) {
+                m1p = p1 * 0.5;
+                m2p = p2 * 0.5;
+                m3p = p3 * 0.5;
+                m4p = p4 * 0.5;
+            } else {
+                m1p = p1;
+                m2p = p2;
+                m3p = p3;
+                m4p = p4;
+            }
+            m1.setPower(m1p);
+            m2.setPower(m2p);
+            m3.setPower(m3p);
+            m4.setPower(m4p);
 
             if (gamepad1.left_trigger >= 0.1) {
                 m5.setPower(-100);
