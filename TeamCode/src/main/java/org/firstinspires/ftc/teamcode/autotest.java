@@ -13,7 +13,6 @@ public class autotest extends  LinearOpMode {
 
     DcMotor m1, m2, m3, m4;
     BNO055IMU imu;
-    DistanceSensor frontDistance, leftDistance, rightDistance, backDistance;
     ColorSensor colorSensor;
 
     public void runOpMode(){
@@ -24,79 +23,11 @@ public class autotest extends  LinearOpMode {
         m4 = hardwareMap.dcMotor.get("back_right_motor");
         m1.setDirection(DcMotor.Direction.REVERSE);
         m2.setDirection(DcMotor.Direction.REVERSE);
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        frontDistance = hardwareMap.get(DistanceSensor.class, "front_distance");
-        leftDistance = hardwareMap.get(DistanceSensor.class, "left_distance");
-        rightDistance = hardwareMap.get(DistanceSensor.class, "right_distance");
-        backDistance = hardwareMap.get(DistanceSensor.class, "back_distance");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.accelerationIntegrationAlgorithm = null;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.calibrationData = null;
-        parameters.calibrationDataFile = "";
-        parameters.loggingEnabled = false;
-        parameters.loggingTag = "Who cares.";
-        imu.initialize(parameters);
 
         //commands to run in auto starts
 
         setPower(0, 1, 0);
         while (m1.getCurrentPosition() < 2200) {
-        }
-        setPower(0, 0, 0);
-
-        setPower(0, 0, 0.5);
-        while (m1.getCurrentPosition() > 130) {
-        }
-        setPower(0, 0, 0);
-
-        setPower(0, 1, 0);
-        while (m1.getCurrentPosition() < 2400) {
-        }
-        setPower(0, 0, 0);
-
-        sleep(2000);
-
-        setPower(0, -1, 0);
-        while (m1.getCurrentPosition() > 130) {
-        }
-        setPower(0, 0, 0);
-
-        setPower(0, 0, -0.5);
-        while (m1.getCurrentPosition() < 2200) {
-        }
-        setPower(0, 0, 0);
-
-        setPower(0, 1, 0);
-        while (m1.getCurrentPosition() < 10500) {
-        }
-        setPower(0, 0, 0);
-
-        setPower(0, 0, 0.5);
-        while (m1.getCurrentPosition() > 8470) {
-        }
-        setPower(0, 0, 0);
-
-        setPower(0, 1, 0);
-        while (m1.getCurrentPosition() < 10750) {
-        }
-        setPower(0, 0, 0);
-
-        sleep(2000);
-
-        setPower(0, -1, 0);
-        while (m1.getCurrentPosition() > 8470) {
-        }
-        setPower(0, 0, 0);
-
-        setPower(0, 0, 0.5);
-        while (m1.getCurrentPosition() > 6380) {
-        }
-        setPower(0, 0, 0);
-
-        setPower(0, 1, 0);
-        while (m1.getCurrentPosition() < 17000) {
         }
         setPower(0, 0, 0);
 

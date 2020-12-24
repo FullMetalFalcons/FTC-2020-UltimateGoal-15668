@@ -24,10 +24,8 @@ public class specialtest extends LinearOpMode {
         DcMotor m2 = hardwareMap.dcMotor.get("front_left_motor");
         DcMotor m3 = hardwareMap.dcMotor.get("front_right_motor");
         DcMotor m4 = hardwareMap.dcMotor.get("back_right_motor");
-        DcMotor m5 = hardwareMap.dcMotor.get("shooter_launch");
-        DcMotor m6 = hardwareMap.dcMotor.get("shooter_intake");
-        DcMotor m7 = hardwareMap.dcMotor.get("7");
-        DcMotor m8 = hardwareMap.dcMotor.get("8");
+        DcMotor m5 = hardwareMap.dcMotor.get("shooter");
+
 
         m1.setDirection(DcMotor.Direction.REVERSE);
         m2.setDirection(DcMotor.Direction.REVERSE);
@@ -39,9 +37,9 @@ public class specialtest extends LinearOpMode {
 
         while (opModeIsActive()){
 
-            double px = gamepad1.left_stick_x;
-            double py = -gamepad1.left_stick_y;
-            double pa = -gamepad1.right_stick_x;
+            double px = -gamepad1.left_stick_x;
+            double py = gamepad1.left_stick_y;
+            double pa = gamepad1.right_stick_x;
             boolean halfp;
             double m1p;
             double m2p;
@@ -60,11 +58,9 @@ public class specialtest extends LinearOpMode {
             p2 /= max;
             p3 /= max;
             p4 /= max;
-            if (gamepad1.left_stick_button == true || gamepad1.right_stick_button == true) {
-                halfp = true;
-            } else {
-                halfp = false;
-            }
+
+            halfp = true;
+
             if (halfp == true) {
                 m1p = p1 * 0.5;
                 m2p = p2 * 0.5;
@@ -76,25 +72,22 @@ public class specialtest extends LinearOpMode {
                 m3p = p3;
                 m4p = p4;
             }
+
             m1.setPower(m1p);
             m2.setPower(m2p);
             m3.setPower(m3p);
             m4.setPower(m4p);
 
+            telemetry.addData("Encoders"," %d %d %d %d", m1.getCurrentPosition(), m2.getCurrentPosition(), m3.getCurrentPosition(), m4.getCurrentPosition());
+
             if (gamepad1.left_trigger >= 0.1) {
-                m5.setPower(-100);
+                m5.setPower(-gamepad1.left_trigger);
             }
-
-            if (gamepad1.right_trigger >= 0.1) {
-                m5.setPower(100);
+            if (gamepad1. right_trigger >= 0.1) {
+                m5.setPower(gamepad1.right_trigger);
             }
-
-            if (gamepad1.left_bumper == true) {
-                m6.setPower(-100);
-            }
-
-            if (gamepad1.right_bumper == true) {
-                m6.setPower(100);
+            if (gamepad1.a == true) {
+                m5.setPower(0);
             }
 
         }
@@ -104,9 +97,6 @@ public class specialtest extends LinearOpMode {
         m3.setPower(0);
         m4.setPower(0);
         m5.setPower(0);
-        m6.setPower(0);
-        m7.setPower(0);
-        m8.setPower(0);
 
     }
 
