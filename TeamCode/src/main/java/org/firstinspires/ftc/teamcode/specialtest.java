@@ -90,6 +90,8 @@ public class specialtest extends LinearOpMode {
                 m5.setPower(0);
             }
 
+            telemetry.update();
+
         }
 
         m1.setPower(0);
