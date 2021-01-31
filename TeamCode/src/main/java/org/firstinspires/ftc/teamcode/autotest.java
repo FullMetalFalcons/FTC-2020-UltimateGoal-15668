@@ -15,7 +15,11 @@ public class autotest extends  LinearOpMode {
     BNO055IMU imu;
     ColorSensor colorSensor;
 
+
+
     public void runOpMode(){
+
+        waitForStart();
 
         m1 = hardwareMap.dcMotor.get("back_left_motor");
         m2 = hardwareMap.dcMotor.get("front_left_motor");
