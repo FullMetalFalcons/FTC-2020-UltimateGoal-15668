@@ -1,5 +1,7 @@
+// package defined
 package org.firstinspires.ftc.teamcode;
 
+// import classes
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,15 +10,19 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+// auto is defined
 @Autonomous(name = "AUTOTEST", group = "Test")
 
-public class autotest extends  LinearOpMode {
+// builds on LinearOpMode
+public class FinalAuto extends  LinearOpMode {
 
+    // hardware is set
     DcMotor m1, m2, m3, m4, m5, m6, m7, m8;
     Servo m9;
 
     public void runOpMode(){
 
+        // hardware is defined
         m1 = hardwareMap.dcMotor.get("back_left_motor");
         m2 = hardwareMap.dcMotor.get("front_left_motor");
         m3 = hardwareMap.dcMotor.get("front_right_motor");
@@ -29,6 +35,7 @@ public class autotest extends  LinearOpMode {
         m8 = hardwareMap.dcMotor.get("belt");
         m9 = hardwareMap.servo.get("gate");
 
+        //  reset encoders - stop
         m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -38,6 +45,7 @@ public class autotest extends  LinearOpMode {
         m7.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m8.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        // reset encoders - start
         m1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
