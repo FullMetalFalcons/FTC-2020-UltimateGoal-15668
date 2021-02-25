@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,9 +14,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 // builds on LinearOpMode
 public class FinalTeleOp extends LinearOpMode {
-
-    // test boolean for toggle
-    boolean changed = false;
 
     // teleop code
     public void runOpMode() {
@@ -27,7 +25,7 @@ public class FinalTeleOp extends LinearOpMode {
         DcMotor m4 = hardwareMap.dcMotor.get("back_right_motor");
         m1.setDirection(DcMotor.Direction.REVERSE);
         m2.setDirection(DcMotor.Direction.REVERSE);
-        DcMotor m5 = hardwareMap.dcMotor.get("shooter");
+        DcMotorEx m5 = (DcMotorEx) hardwareMap.dcMotor.get("shooter");
         DcMotor m6 = hardwareMap.dcMotor.get("intake");
         DcMotor m7 = hardwareMap.dcMotor.get("arm");
         DcMotor m8 = hardwareMap.dcMotor.get("belt");
@@ -38,7 +36,6 @@ public class FinalTeleOp extends LinearOpMode {
         m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m4.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        m5.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m6.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m7.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m8.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -50,95 +47,107 @@ public class FinalTeleOp extends LinearOpMode {
         m4.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m5.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m6.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m7.setTargetPosition(0);
         m7.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         m8.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // set arm behavior when no power
         m7.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        // sets up variables for toggles
+        boolean halfPower = false;
+        boolean stickPressed = false;
+        boolean shooterStarted = false;
+        boolean rbPressed = false;
+        boolean shooterStartedLow = false;
+        boolean lbPressed = false;
+
         // start telemetry
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        waitForStart();
+
         // opmode code
         while (opModeIsActive()){
 
-            // driving code
+            // code for driving and toggling slow mode
+            double totalpowervalue;
+            if (!stickPressed && ( (gamepad1.left_stick_button) || (gamepad1.right_stick_button) ) ) {
+                halfPower = !halfPower;
+                stickPressed = true;
+            } else if (stickPressed && !( (gamepad1.left_stick_button) || (gamepad1.right_stick_button) ) ) {
+                stickPressed = false;
+            }
+            if (halfPower == true) {
+                totalpowervalue = 0.5;
+            } else {
+                totalpowervalue = 1;
+            }
             double y = gamepad1.left_stick_y;
             double x = -gamepad1.left_stick_x;
             double rx = -gamepad1.right_stick_x;
-            boolean slow = false;
-            if ( (gamepad1.left_stick_button) || (gamepad1.right_stick_button) ) {
-                slow = true;
+            m1.setPower(totalpowervalue * (y - x + rx));
+            m2.setPower(totalpowervalue * (y + x + rx));
+            m3.setPower(totalpowervalue * (y - x - rx));
+            m4.setPower(totalpowervalue * (y + x - rx));
+
+            // code for toggling shooter for high goal and opening gate
+            if (!rbPressed && gamepad1.right_bumper) {
+                shooterStarted = !shooterStarted;
+                rbPressed = true;
+            } else if (rbPressed && !gamepad1.right_bumper) {
+                rbPressed = false;
             }
-            if (slow == true) {
-                m1.setPower( 0.5 * (y - x + rx) );
-                m2.setPower( 0.5 * (y + x + rx) );
-                m3.setPower( 0.5 * (y - x - rx) );
-                m4.setPower( 0.5 * (y + x - rx) );
+            if (shooterStarted == true) {
+                m5.setVelocity(1700);
+                m9.setPosition(0);
             } else {
-                m1.setPower(y - x + rx);
-                m2.setPower(y + x + rx);
-                m3.setPower(y - x - rx);
-                m4.setPower(y + x - rx);
+                m5.setVelocity(0);
+                m9.setPosition(0.62);
             }
 
-            // code for shooter and gate for high goal
-            if (gamepad1.right_bumper) {
-                m9.setPosition(0.62);
-                m5.setPower(gamepad1.right_trigger * 0.9);
-            } else {
-                m9.setPosition(0);
-                m5.setPower(0);
+            // code for toggling shooter for power shots and opening gate
+            if (!lbPressed && gamepad1.left_bumper) {
+                shooterStartedLow = !shooterStartedLow;
+                lbPressed = true;
+            } else if (lbPressed && !gamepad1.left_bumper) {
+                lbPressed = false;
             }
-
-            // code for shooter and gate for power shots
-            if (gamepad1.left_bumper) {
-                m9.setPosition(0.62);
-                m5.setPower(gamepad1.right_trigger * 0.67);
-            } else {
+            if (shooterStartedLow == true) {
+                m5.setVelocity(1000);
                 m9.setPosition(0);
-                m5.setPower(0);
+            } else {
+                m5.setVelocity(0);
+                m9.setPosition(0.62);
             }
 
             // code for intake and belt
-            if (gamepad1.right_trigger >= 0.1) {
-                m6.setPower(-gamepad1.right_trigger);
+            if (gamepad1.right_trigger > 0.1) {
+                m6.setPower(gamepad1.right_trigger * -1);
                 m8.setPower(1);
+            } else if (gamepad1.left_trigger > 0.1) {
+                m6.setPower(gamepad1.left_trigger);
             } else {
                 m6.setPower(0);
                 m8.setPower(0);
             }
 
-            // code for intake
-            if (gamepad1.left_trigger >= 0.1) {
-                m6.setPower(gamepad1.right_trigger);
+            // code for operating arm
+            if (gamepad1.y == true) {
+                m7.setTargetPosition(1000);
+                m7.setPower(1);
+            } else if (gamepad1.b == true) {
+                m7.setTargetPosition(200);
+                m7.setPower(1);
             } else {
-                m6.setPower(0);
+                m7.setPower(0);
             }
 
-            // arm to out position
-            if (gamepad1.b) {
-                m7.setTargetPosition(1418);
-                m7.setPower(0.3);
-            }
-
-            // arm to start position
-            if (gamepad1.x) {
-                m7.setTargetPosition(0);
-                m7.setPower(0.3);
-            }
-
-            // toggle shooter test
-            if(gamepad1.a && !changed) {
-                if(m5.getPower() == 0) m5.setPower(1);
-                else m5.setPower(0);
-                changed = true;
-            } else if(!gamepad1.right_bumper) changed = false;
-
-            // other telemetry
+            // telemetry data adding and updating
             telemetry.addData("Encoders"," %d %d %d %d", m1.getCurrentPosition(), m2.getCurrentPosition(), m3.getCurrentPosition(), m4.getCurrentPosition());
             telemetry.addData("arm: ", m7.getCurrentPosition());
+            telemetry.addData("Shooter: ", m5.getVelocity());
             telemetry.update();
 
         }
@@ -148,7 +157,7 @@ public class FinalTeleOp extends LinearOpMode {
         m2.setPower(0);
         m3.setPower(0);
         m4.setPower(0);
-        m5.setPower(0);
+        m5.setVelocity(0);
         m6.setPower(0);
         m7.setPower(0);
         m8.setPower(0);

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -29,7 +30,7 @@ public class FinalAuto extends  LinearOpMode {
         m4 = hardwareMap.dcMotor.get("back_right_motor");
         m1.setDirection(DcMotor.Direction.REVERSE);
         m2.setDirection(DcMotor.Direction.REVERSE);
-        m5 = hardwareMap.dcMotor.get("shooter");
+        DcMotorEx m5 = (DcMotorEx) hardwareMap.dcMotor.get("shooter");
         m6 = hardwareMap.dcMotor.get("intake");
         m7 = hardwareMap.dcMotor.get("arm");
         m8 = hardwareMap.dcMotor.get("belt");
@@ -52,6 +53,7 @@ public class FinalAuto extends  LinearOpMode {
         m4.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m5.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m6.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m7.setTargetPosition(0);
         m7.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         m8.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -70,9 +72,9 @@ public class FinalAuto extends  LinearOpMode {
         m2.setPower(0);
         m3.setPower(0);
         m4.setPower(0);
-        m5.setPower(0);
+        m5.setVelocity(0);
         m6.setPower(0);
-        m7.setPower(0);
+        m7.setTargetPosition(0);
         m8.setPower(0);
 
     }
