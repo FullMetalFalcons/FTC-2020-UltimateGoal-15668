@@ -57,6 +57,9 @@ public class FinalAuto extends  LinearOpMode {
         m7.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         m8.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        // set arm behavior when no power
+        m7.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         waitForStart();
 
         //commands to run in auto starts
@@ -85,7 +88,5 @@ public class FinalAuto extends  LinearOpMode {
         m3.setPower(y - x - rx);
         m4.setPower(y + x - rx);
     }
-
-
 
 }
