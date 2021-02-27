@@ -56,7 +56,7 @@ public class FinalTeleOp extends LinearOpMode {
         // set arm behavior when no power
         m7.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // sets up variables for toggles
+        // sets up variables for all toggles
         boolean halfPower = false;
         boolean stickPressed = false;
         boolean shooterStarted = false;
