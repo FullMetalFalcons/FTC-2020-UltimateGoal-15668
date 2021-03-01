@@ -154,7 +154,7 @@ public class FinalTeleOp extends LinearOpMode {
             }
             if (armOut == true) {
                 armIn = false;
-                m7.setTargetPosition(1075);
+                m7.setTargetPosition(1050);
                 m7.setPower(0.5);
             }
             if (!bPressed && gamepad1.b) {
