@@ -14,22 +14,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 // builds on LinearOpMode
 public class FinalTeleOp extends LinearOpMode {
 
+    // defines hardware
+    DcMotor m1 = hardwareMap.dcMotor.get("back_left_motor");
+    DcMotor m2 = hardwareMap.dcMotor.get("front_left_motor");
+    DcMotor m3 = hardwareMap.dcMotor.get("front_right_motor");
+    DcMotor m4 = hardwareMap.dcMotor.get("back_right_motor");
+    DcMotorEx m5 = (DcMotorEx) hardwareMap.dcMotor.get("shooter");
+    DcMotor m6 = hardwareMap.dcMotor.get("intake");
+    DcMotor m7 = hardwareMap.dcMotor.get("arm");
+    DcMotor m8 = hardwareMap.dcMotor.get("belt");
+    Servo m9 = hardwareMap.servo.get("gate");
+    Servo m10 = hardwareMap.servo.get("agate");
+
     // teleop code
     public void runOpMode() {
 
-        // defines hardware
-        DcMotor m1 = hardwareMap.dcMotor.get("back_left_motor");
-        DcMotor m2 = hardwareMap.dcMotor.get("front_left_motor");
-        DcMotor m3 = hardwareMap.dcMotor.get("front_right_motor");
-        DcMotor m4 = hardwareMap.dcMotor.get("back_right_motor");
         m1.setDirection(DcMotor.Direction.REVERSE);
         m2.setDirection(DcMotor.Direction.REVERSE);
-        DcMotorEx m5 = (DcMotorEx) hardwareMap.dcMotor.get("shooter");
-        DcMotor m6 = hardwareMap.dcMotor.get("intake");
-        DcMotor m7 = hardwareMap.dcMotor.get("arm");
-        DcMotor m8 = hardwareMap.dcMotor.get("belt");
-        Servo m9 = hardwareMap.servo.get("gate");
-        Servo m10 = hardwareMap.servo.get("agate");
 
         // reset encoders - stop
         m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -67,6 +68,8 @@ public class FinalTeleOp extends LinearOpMode {
         boolean bPressed = false;
         boolean gateOpen = false;
         boolean aPressed = false;
+        boolean armDrop = false;
+        boolean xPressed = false;
 
         // start telemetry
         telemetry.addData("Status", "Initialized");
@@ -86,7 +89,7 @@ public class FinalTeleOp extends LinearOpMode {
                 stickPressed = false;
             }
             if (halfPower == true) {
-                totalpowervalue = 0.5;
+                totalpowervalue = 0.25;
             } else if (halfPower == false) {
                 totalpowervalue = 1;
             }
@@ -107,7 +110,7 @@ public class FinalTeleOp extends LinearOpMode {
             }
             if (shooterStarted == true) {
                 shooterStartedLow = false;
-                double highpower = 1800;
+                double highpower = 1500;
                 m5.setVelocity(highpower);
                 if (m5.getVelocity() >= highpower - 10) {
                     m9.setPosition(0);
@@ -121,7 +124,7 @@ public class FinalTeleOp extends LinearOpMode {
             }
             if (shooterStartedLow == true) {
                 shooterStarted = false;
-                double lowpower = 1400;
+                double lowpower = 1300;
                 m5.setVelocity(lowpower);
                 if (m5.getVelocity() >= lowpower - 10) {
                     m9.setPosition(0);
@@ -152,8 +155,9 @@ public class FinalTeleOp extends LinearOpMode {
             }
             if (armOut == true) {
                 armIn = false;
-                m7.setTargetPosition(1050);
-                m7.setPower(0.5);
+                armDrop = false;
+                m7.setTargetPosition(150);
+                m7.setPower(0.25);
             }
             if (!bPressed && gamepad1.b) {
                 armIn = !armIn;
@@ -163,13 +167,27 @@ public class FinalTeleOp extends LinearOpMode {
             }
             if (armIn == true) {
                 armOut = false;
-                m7.setTargetPosition(150);
-                m7.setPower(0.5);
+                armDrop = false;
+                m7.setTargetPosition(1050);
+                m7.setPower(0.25);
             }
-            if (armOut == false && armIn == false) {
+            if (!xPressed && gamepad1.x) {
+                armDrop = !armDrop;
+                xPressed = true;
+            } else if (xPressed && !gamepad1.x) {
+                xPressed = false;
+            }
+            if (armDrop == true) {
+                armOut = false;
+                armIn = false;
+                m7.setTargetPosition(650);
+                m7.setPower(0.25);
+            }
+            if (armOut == false && armIn == false && armDrop == false) {
                 m7.setTargetPosition(0);
-                m7.setPower(0.5);
+                m7.setPower(0.25);
             }
+
 
             // code for operating gate arm
             if (!aPressed && gamepad1.a) {
@@ -179,9 +197,9 @@ public class FinalTeleOp extends LinearOpMode {
                 aPressed = false;
             }
             if (gateOpen == true) {
-                m10.setPosition(0);
+                m10.setPosition(-1);
             } else if (gateOpen == false) {
-                m10.setPosition(0);
+                m10.setPosition(1);
             }
 
             // code for belt outtake
@@ -199,6 +217,8 @@ public class FinalTeleOp extends LinearOpMode {
             telemetry.addData("arm gate:", m10.getPosition());
             telemetry.update();
 
+
+
         }
 
         // set motor power to 0 when finished
@@ -211,6 +231,15 @@ public class FinalTeleOp extends LinearOpMode {
         m7.setPower(0);
         m8.setPower(0);
 
+
+    }
+
+    void setPower(double forward, double side, double rotate) {
+        m1.setPower(forward + side - rotate);
+        m2.setPower(forward - side - rotate);
+        m3.setPower(forward + side + rotate);
+        m4.setPower(forward - side + rotate);
     }
 
 }
+
