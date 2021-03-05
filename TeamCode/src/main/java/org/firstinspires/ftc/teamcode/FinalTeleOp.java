@@ -15,22 +15,25 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class FinalTeleOp extends LinearOpMode {
 
     // defines hardware
-    DcMotor m1 = hardwareMap.dcMotor.get("back_left_motor");
-    DcMotor m2 = hardwareMap.dcMotor.get("front_left_motor");
-    DcMotor m3 = hardwareMap.dcMotor.get("front_right_motor");
-    DcMotor m4 = hardwareMap.dcMotor.get("back_right_motor");
-    DcMotorEx m5 = (DcMotorEx) hardwareMap.dcMotor.get("shooter");
-    DcMotor m6 = hardwareMap.dcMotor.get("intake");
-    DcMotor m7 = hardwareMap.dcMotor.get("arm");
-    DcMotor m8 = hardwareMap.dcMotor.get("belt");
-    Servo m9 = hardwareMap.servo.get("gate");
-    Servo m10 = hardwareMap.servo.get("agate");
+    DcMotor m1, m2, m3, m4, m5, m6, m7, m8;
+    Servo m9, m10;
 
     // teleop code
     public void runOpMode() {
 
+        // defines hardware
+        m1 = hardwareMap.dcMotor.get("back_left_motor");
+        m2 = hardwareMap.dcMotor.get("front_left_motor");
+        m3 = hardwareMap.dcMotor.get("front_right_motor");
+        m4 = hardwareMap.dcMotor.get("back_right_motor");
         m1.setDirection(DcMotor.Direction.REVERSE);
         m2.setDirection(DcMotor.Direction.REVERSE);
+        DcMotorEx m5 = (DcMotorEx) hardwareMap.dcMotor.get("shooter");
+        m6 = hardwareMap.dcMotor.get("intake");
+        m7 = hardwareMap.dcMotor.get("arm");
+        m8 = hardwareMap.dcMotor.get("belt");
+        m9 = hardwareMap.servo.get("gate");
+        m10 = hardwareMap.servo.get("agate");
 
         // reset encoders - stop
         m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -188,7 +191,6 @@ public class FinalTeleOp extends LinearOpMode {
                 m7.setPower(0.25);
             }
 
-
             // code for operating gate arm
             if (!aPressed && gamepad1.a) {
                 gateOpen = !gateOpen;
@@ -217,8 +219,6 @@ public class FinalTeleOp extends LinearOpMode {
             telemetry.addData("arm gate:", m10.getPosition());
             telemetry.update();
 
-
-
         }
 
         // set motor power to 0 when finished
@@ -231,15 +231,8 @@ public class FinalTeleOp extends LinearOpMode {
         m7.setPower(0);
         m8.setPower(0);
 
-
-    }
-
-    void setPower(double forward, double side, double rotate) {
-        m1.setPower(forward + side - rotate);
-        m2.setPower(forward - side - rotate);
-        m3.setPower(forward + side + rotate);
-        m4.setPower(forward - side + rotate);
     }
 
 }
+
 

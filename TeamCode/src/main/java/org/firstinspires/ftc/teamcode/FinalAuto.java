@@ -21,7 +21,7 @@ public class FinalAuto extends  LinearOpMode {
     DcMotor m1, m2, m3, m4, m5, m6, m7, m8;
     Servo m9;
 
-    public void runOpMode(){
+    public void runOpMode() throws InterruptedException {
 
         // hardware is defined
         m1 = hardwareMap.dcMotor.get("back_left_motor");
@@ -64,10 +64,7 @@ public class FinalAuto extends  LinearOpMode {
 
         //commands to run in auto starts
 
-        setPower(0, 1, 0);
-        while (m1.getCurrentPosition() < 2200) {
-        }
-        setPower(0, 0, 0);
+        encDriveGreater(1,0,0,-2500);
 
         //commands to run in auto ends
 
@@ -83,10 +80,24 @@ public class FinalAuto extends  LinearOpMode {
     }
 
     void setPower(double x, double y, double rx) {
-        m1.setPower(y - x + rx);
-        m2.setPower(y + x + rx);
-        m3.setPower(y - x - rx);
-        m4.setPower(y + x - rx);
+        m1.setPower(-y - x + rx);
+        m2.setPower(-y + x + rx);
+        m3.setPower(-y - x - rx);
+        m4.setPower(-y + x - rx);
+    }
+
+    void encDriveLess (double x, double y, double z, double value) {
+        setPower(x, y, z);
+        while (m1.getCurrentPosition() < value) {
+        }
+        setPower(0, 0, 0);
+    }
+
+    void encDriveGreater (double x, double y, double z, double value) {
+        setPower(x, y, z);
+        while (m1.getCurrentPosition() > value) {
+        }
+        setPower(0, 0, 0);
     }
 
 }
