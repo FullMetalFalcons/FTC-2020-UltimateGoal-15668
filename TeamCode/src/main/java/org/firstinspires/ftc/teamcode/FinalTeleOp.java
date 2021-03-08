@@ -15,7 +15,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class FinalTeleOp extends LinearOpMode {
 
     // defines hardware
-    DcMotor m1, m2, m3, m4, m5, m6, m7, m8;
+    DcMotor m1, m2, m3, m4, m6, m7, m8;
+    DcMotorEx m5;
     Servo m9, m10;
 
     // teleop code
@@ -28,7 +29,7 @@ public class FinalTeleOp extends LinearOpMode {
         m4 = hardwareMap.dcMotor.get("back_right_motor");
         m1.setDirection(DcMotor.Direction.REVERSE);
         m2.setDirection(DcMotor.Direction.REVERSE);
-        DcMotorEx m5 = (DcMotorEx) hardwareMap.dcMotor.get("shooter");
+        m5 = (DcMotorEx) hardwareMap.dcMotor.get("shooter");
         m6 = hardwareMap.dcMotor.get("intake");
         m7 = hardwareMap.dcMotor.get("arm");
         m8 = hardwareMap.dcMotor.get("belt");

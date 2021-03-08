@@ -18,7 +18,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class FinalAuto extends  LinearOpMode {
 
     // hardware is set
-    DcMotor m1, m2, m3, m4, m5, m6, m7, m8;
+    DcMotor m1, m2, m3, m4, m6, m7, m8;
+    DcMotorEx m5;
     Servo m9;
 
     public void runOpMode() throws InterruptedException {
@@ -30,7 +31,7 @@ public class FinalAuto extends  LinearOpMode {
         m4 = hardwareMap.dcMotor.get("back_right_motor");
         m1.setDirection(DcMotor.Direction.REVERSE);
         m2.setDirection(DcMotor.Direction.REVERSE);
-        DcMotorEx m5 = (DcMotorEx) hardwareMap.dcMotor.get("shooter");
+        m5 = (DcMotorEx) hardwareMap.dcMotor.get("shooter");
         m6 = hardwareMap.dcMotor.get("intake");
         m7 = hardwareMap.dcMotor.get("arm");
         m8 = hardwareMap.dcMotor.get("belt");
@@ -47,10 +48,14 @@ public class FinalAuto extends  LinearOpMode {
         m8.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // reset encoders - start
-        m1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        m2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        m3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        m4.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m1.setTargetPosition(0);
+        m2.setTargetPosition(0);
+        m3.setTargetPosition(0);
+        m4.setTargetPosition(0);
+        m1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        m2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        m3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        m4.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         m5.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m6.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m7.setTargetPosition(0);
@@ -64,7 +69,7 @@ public class FinalAuto extends  LinearOpMode {
 
         //commands to run in auto starts
 
-        encDriveGreater(1,0,0,-2500);
+
 
         //commands to run in auto ends
 
@@ -86,18 +91,30 @@ public class FinalAuto extends  LinearOpMode {
         m4.setPower(-y + x - rx);
     }
 
-    void encDriveLess (double x, double y, double z, double value) {
-        setPower(x, y, z);
-        while (m1.getCurrentPosition() < value) {
-        }
-        setPower(0, 0, 0);
+    void driveToValue(double power, double v1, double v2, double v3, double v4) {
+        m1.setTargetPosition((int) v1);
+        m2.setTargetPosition((int) v2);
+        m3.setTargetPosition((int) v3);
+        m4.setTargetPosition((int) v4);
+        m1.setPower(power);
+        m2.setPower(power);
+        m3.setPower(power);
+        m4.setPower(power);
     }
 
-    void encDriveGreater (double x, double y, double z, double value) {
-        setPower(x, y, z);
-        while (m1.getCurrentPosition() > value) {
-        }
-        setPower(0, 0, 0);
+    void resetEncValues() {
+        m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m4.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m1.setTargetPosition(0);
+        m2.setTargetPosition(0);
+        m3.setTargetPosition(0);
+        m4.setTargetPosition(0);
+        m1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        m2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        m3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        m4.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 }
