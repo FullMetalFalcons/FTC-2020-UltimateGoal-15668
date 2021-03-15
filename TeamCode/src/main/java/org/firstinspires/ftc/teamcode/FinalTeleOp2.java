@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 // teleop is defined
-@TeleOp(name = "TeleOp", group = "Final")
+@TeleOp(name = "TeleOp 2", group = "Final")
 
 // builds on LinearOpMode
-public class FinalTeleOp extends LinearOpMode {
+public class FinalTeleOp2 extends LinearOpMode {
 
     // defines hardware
     DcMotor m1, m2, m3, m4, m6, m7, m8;
@@ -106,10 +106,10 @@ public class FinalTeleOp extends LinearOpMode {
             m4.setPower(totalpowervalue * (y + x - rx));
 
             // code for toggling shooter and opening gate
-            if (!rbPressed && gamepad1.right_bumper) {
+            if (!rbPressed && gamepad2.right_bumper) {
                 shooterStarted = !shooterStarted;
                 rbPressed = true;
-            } else if (rbPressed && !gamepad1.right_bumper) {
+            } else if (rbPressed && !gamepad2.right_bumper) {
                 rbPressed = false;
             }
             if (shooterStarted == true) {
@@ -120,10 +120,10 @@ public class FinalTeleOp extends LinearOpMode {
                     m9.setPosition(0.05);
                 }
             }
-            if (!lbPressed && gamepad1.left_bumper) {
+            if (!lbPressed && gamepad2.left_bumper) {
                 shooterStartedLow = !shooterStartedLow;
                 lbPressed = true;
-            } else if (lbPressed && !gamepad1.left_bumper) {
+            } else if (lbPressed && !gamepad2.left_bumper) {
                 lbPressed = false;
             }
             if (shooterStartedLow == true) {
@@ -140,21 +140,21 @@ public class FinalTeleOp extends LinearOpMode {
             }
 
             // code for intake and belt
-            if (gamepad1.right_trigger > 0.1) {
-                m6.setPower(gamepad1.right_trigger * -1);
+            if (gamepad2.right_trigger > 0.1) {
+                m6.setPower(gamepad2.right_trigger * -1);
                 m8.setPower(-1);
-            } else if (gamepad1.left_trigger > 0.1) {
-                m6.setPower(gamepad1.left_trigger);
+            } else if (gamepad2.left_trigger > 0.1) {
+                m6.setPower(gamepad2.left_trigger);
             } else {
                 m6.setPower(0);
                 m8.setPower(0);
             }
 
             // code for operating arm
-            if (!yPressed && gamepad1.y) {
+            if (!yPressed && gamepad2.y) {
                 armOut = !armOut;
                 yPressed = true;
-            } else if (yPressed && !gamepad1.y) {
+            } else if (yPressed && !gamepad2.y) {
                 yPressed = false;
             }
             if (armOut == true) {
@@ -163,10 +163,10 @@ public class FinalTeleOp extends LinearOpMode {
                 m7.setTargetPosition(150);
                 m7.setPower(0.25);
             }
-            if (!bPressed && gamepad1.b) {
+            if (!bPressed && gamepad2.b) {
                 armIn = !armIn;
                 bPressed = true;
-            } else if (bPressed && !gamepad1.b) {
+            } else if (bPressed && !gamepad2.b) {
                 bPressed = false;
             }
             if (armIn == true) {
@@ -175,10 +175,10 @@ public class FinalTeleOp extends LinearOpMode {
                 m7.setTargetPosition(1050);
                 m7.setPower(0.25);
             }
-            if (!xPressed && gamepad1.x) {
+            if (!xPressed && gamepad2.x) {
                 armDrop = !armDrop;
                 xPressed = true;
-            } else if (xPressed && !gamepad1.x) {
+            } else if (xPressed && !gamepad2.x) {
                 xPressed = false;
             }
             if (armDrop == true) {
@@ -193,10 +193,10 @@ public class FinalTeleOp extends LinearOpMode {
             }
 
             // code for operating gate arm
-            if (!aPressed && gamepad1.a) {
+            if (!aPressed && gamepad2.a) {
                 gateOpen = !gateOpen;
                 aPressed = true;
-            } else if (aPressed && !gamepad1.a) {
+            } else if (aPressed && !gamepad2.a) {
                 aPressed = false;
             }
             if (gateOpen == true) {
@@ -206,7 +206,7 @@ public class FinalTeleOp extends LinearOpMode {
             }
 
             // code for belt outtake
-            if (gamepad1.dpad_left == true) {
+            if (gamepad2.dpad_left == true) {
                 m8.setPower(1);
             }
 
