@@ -80,7 +80,7 @@ public class FinalAuto extends  LinearOpMode {
 
         //commands to run in auto starts
 
-        driveToValueE(-0.3, -2100);
+        driveToValueE(-0.2, -2100);
 
 
         shooterRun(1300,5000);
