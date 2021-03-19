@@ -20,7 +20,7 @@ public class EmergencyBackup extends  LinearOpMode {
 
     DcMotor m1, m2, m3, m4, m6, m7, m8;
     DcMotorEx m5;
-    Servo m9;
+    Servo m9, m10;
     BNO055IMU imu;
 
     private double[] distances;
@@ -42,6 +42,8 @@ public class EmergencyBackup extends  LinearOpMode {
         m7 = hardwareMap.dcMotor.get("arm");
         m8 = hardwareMap.dcMotor.get("belt");
         m9 = hardwareMap.servo.get("gate");
+        m10 = hardwareMap.servo.get("agate");
+
 
         m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -75,14 +77,15 @@ public class EmergencyBackup extends  LinearOpMode {
         Orientation orientation;
 
         m9.setPosition(0.22);
+        m10.setPosition(1);
 
         waitForStart();
 
         //commands to run in auto starts
 
-        driveToValueE(-0.2, -2100);
+        driveToValueE(-0.25, -2100);
 
-        shooterRun(1450,5000);
+        shooterRun(1420,3500);
         m5.setPower(0);
 
         setPower(0, 0, -0.5f);
@@ -95,9 +98,35 @@ public class EmergencyBackup extends  LinearOpMode {
 
         driveToValueE(0.2, 600);
 
+        m6.setPower(0);
+        m5.setVelocity(0);
+        m8.setPower(0);
+
         m7.setTargetPosition(1050);
         m7.setPower(0.25);
-        sleep(2000);
+        sleep(1500);
+        m10.setPosition(0.5);
+        sleep(700);
+        m7.setTargetPosition(0);
+        m7.setPower(0.25);
+        sleep(1500);
+        m10.setPosition(1);
+        sleep(200);
+
+        setPower(0, 0, 0.25f);
+        while (opModeIsActive()){
+            orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            if (orientation.firstAngle >= 1) break;
+        }
+        setPower(0, 0, 0);
+        sleep(100);
+
+        setPower(0.5,0,0);
+        sleep(1200);
+        setPower(0.1,0,0);
+        sleep(700);
+
+
 
         //commands to run in auto ends
 

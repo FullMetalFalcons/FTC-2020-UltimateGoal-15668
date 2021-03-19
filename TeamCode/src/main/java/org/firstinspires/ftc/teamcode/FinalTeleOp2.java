@@ -200,7 +200,7 @@ public class FinalTeleOp2 extends LinearOpMode {
                 aPressed = false;
             }
             if (gateOpen == true) {
-                m10.setPosition(-1);
+                m10.setPosition(0.5);
             } else if (gateOpen == false) {
                 m10.setPosition(1);
             }
