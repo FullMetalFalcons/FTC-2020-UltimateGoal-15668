@@ -2,11 +2,17 @@
 package org.firstinspires.ftc.teamcode;
 
 // import classes
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 // teleop is defined
 @TeleOp(name = "TeleOp", group = "Final")
@@ -18,6 +24,8 @@ public class FinalTeleOp extends LinearOpMode {
     DcMotor m1, m2, m3, m4, m6, m7, m8;
     DcMotorEx m5;
     Servo m9, m10;
+    BNO055IMU imu;
+
 
     // teleop code
     public void runOpMode() {
@@ -58,6 +66,18 @@ public class FinalTeleOp extends LinearOpMode {
 
         // set arm behavior when no power
         m7.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.accelerationIntegrationAlgorithm = null;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.calibrationData = null;
+        parameters.calibrationDataFile = "";
+        parameters.loggingEnabled = false;
+        parameters.loggingTag = "Who cares.";
+        imu.initialize(parameters);
+        Orientation orientation;
 
         // sets up variables for all toggles
         boolean halfPower = false;
@@ -114,7 +134,7 @@ public class FinalTeleOp extends LinearOpMode {
             }
             if (shooterStarted == true) {
                 shooterStartedLow = false;
-                double highpower = 1500;
+                double highpower = 1425;
                 m5.setVelocity(highpower);
                 if (m5.getVelocity() >= highpower - 10) {
                     m9.setPosition(0.05);
@@ -136,7 +156,7 @@ public class FinalTeleOp extends LinearOpMode {
             }
             if (shooterStartedLow == false && shooterStarted == false) {
                 m5.setVelocity(0);
-                m9.setPosition(0.22);
+                m9.setPosition(0.5);
             }
 
             // code for intake and belt
@@ -210,6 +230,27 @@ public class FinalTeleOp extends LinearOpMode {
                 m8.setPower(1);
             }
 
+            if (gamepad1.start == true) {
+                setPower(0, 0, 0.25f);
+                while (opModeIsActive()){
+                    orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                    if (orientation.firstAngle >= 1) break;
+                }
+                setPower(0, 0, 0);
+            }
+
+            if (gamepad1.right_bumper) {
+                m6.setPower(0.1);
+            }
+
+            if (gamepad1.right_bumper) {
+                m8.setPower(1);
+            }
+
+            if (gamepad1.left_bumper) {
+                m8.setPower(1);
+            }
+
             // telemetry data adding and updating
             telemetry.addData("Encoders"," %d %d %d %d", m1.getCurrentPosition(), m2.getCurrentPosition(), m3.getCurrentPosition(), m4.getCurrentPosition());
             telemetry.addData("shooter ", m5.getVelocity());
@@ -232,6 +273,13 @@ public class FinalTeleOp extends LinearOpMode {
         m7.setPower(0);
         m8.setPower(0);
 
+    }
+
+    void setPower(double x, double y, double rx) {
+        m1.setPower(y - x + rx);
+        m2.setPower(y + x + rx);
+        m3.setPower(y - x - rx);
+        m4.setPower(y + x - rx);
     }
 
 }

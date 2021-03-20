@@ -76,7 +76,7 @@ public class EmergencyBackup extends  LinearOpMode {
         imu.initialize(parameters);
         Orientation orientation;
 
-        m9.setPosition(0.22);
+        m9.setPosition(0.5);
         m10.setPosition(1);
 
         waitForStart();
@@ -85,7 +85,7 @@ public class EmergencyBackup extends  LinearOpMode {
 
         driveToValueE(-0.25, -2100);
 
-        shooterRun(1420,3500);
+        shooterRun(1400,3500);
         m5.setPower(0);
 
         setPower(0, 0, -0.5f);
@@ -113,20 +113,20 @@ public class EmergencyBackup extends  LinearOpMode {
         m10.setPosition(1);
         sleep(200);
 
+        driveToValueE(-0.2, -300);
+
         setPower(0, 0, 0.25f);
         while (opModeIsActive()){
             orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            if (orientation.firstAngle >= 1) break;
+            if (orientation.firstAngle >= -10) break;
         }
         setPower(0, 0, 0);
         sleep(100);
 
-        setPower(0.5,0,0);
-        sleep(1200);
-        setPower(0.1,0,0);
-        sleep(700);
+        setPower(0.2,0,0);
+        sleep(3500);
 
-
+        driveToValueE(-0.2, -600);
 
         //commands to run in auto ends
 
@@ -197,7 +197,7 @@ public class EmergencyBackup extends  LinearOpMode {
             m9.setPosition(0.05);
         }
         sleep(200);
-        m8.setPower(-1);
+        m8.setPower(-0.8);
         m6.setPower(-1);
         m5.setVelocity(rpm);
         sleep(time);

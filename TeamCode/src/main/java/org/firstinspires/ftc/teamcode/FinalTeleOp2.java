@@ -2,11 +2,17 @@
 package org.firstinspires.ftc.teamcode;
 
 // import classes
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 // teleop is defined
 @TeleOp(name = "TeleOp 2", group = "Final")
@@ -18,6 +24,7 @@ public class FinalTeleOp2 extends LinearOpMode {
     DcMotor m1, m2, m3, m4, m6, m7, m8;
     DcMotorEx m5;
     Servo m9, m10;
+    BNO055IMU imu;
 
     // teleop code
     public void runOpMode() {
@@ -59,6 +66,25 @@ public class FinalTeleOp2 extends LinearOpMode {
         // set arm behavior when no power
         m7.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.accelerationIntegrationAlgorithm = null;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.calibrationData = null;
+        parameters.calibrationDataFile = "";
+        parameters.loggingEnabled = false;
+        parameters.loggingTag = "Who cares.";
+        imu.initialize(parameters);
+        Orientation orientation;
+
+        double startHeading = 0;
+        boolean previouspress = false;
+        boolean previouspressy = false;
+
+        double[] distances;
+
+
         // sets up variables for all toggles
         boolean halfPower = false;
         boolean stickPressed = false;
@@ -76,7 +102,13 @@ public class FinalTeleOp2 extends LinearOpMode {
         boolean xPressed = false;
 
         // start telemetry
-        telemetry.addData("Status", "Initialized");
+        telemetry.addData("Encoders"," %d %d %d %d", m1.getCurrentPosition(), m2.getCurrentPosition(), m3.getCurrentPosition(), m4.getCurrentPosition());
+        telemetry.addData("shooter ", m5.getVelocity());
+        telemetry.addData("gate: ", m9.getPosition());
+        telemetry.addData("imu: ", getHeading(AngleUnit.DEGREES));
+        telemetry.addData("belt: ", m8.getPower());
+        telemetry.addData("arm: ", m7.getCurrentPosition());
+        telemetry.addData("arm gate:", m10.getPosition());
         telemetry.update();
 
         waitForStart();
@@ -106,29 +138,29 @@ public class FinalTeleOp2 extends LinearOpMode {
             m4.setPower(totalpowervalue * (y + x - rx));
 
             // code for toggling shooter and opening gate
-            if (!rbPressed && gamepad2.right_bumper) {
+            if (!rbPressed && gamepad1.right_bumper) {
                 shooterStarted = !shooterStarted;
                 rbPressed = true;
-            } else if (rbPressed && !gamepad2.right_bumper) {
+            } else if (rbPressed && !gamepad1.right_bumper) {
                 rbPressed = false;
             }
             if (shooterStarted == true) {
                 shooterStartedLow = false;
-                double highpower = 1500;
+                double highpower = 1400;
                 m5.setVelocity(highpower);
                 if (m5.getVelocity() >= highpower - 10) {
                     m9.setPosition(0.05);
                 }
             }
-            if (!lbPressed && gamepad2.left_bumper) {
+            if (!lbPressed && gamepad1.left_bumper) {
                 shooterStartedLow = !shooterStartedLow;
                 lbPressed = true;
-            } else if (lbPressed && !gamepad2.left_bumper) {
+            } else if (lbPressed && !gamepad1.left_bumper) {
                 lbPressed = false;
             }
             if (shooterStartedLow == true) {
                 shooterStarted = false;
-                double lowpower = 1300;
+                double lowpower = 1275;
                 m5.setVelocity(lowpower);
                 if (m5.getVelocity() >= lowpower - 10) {
                     m9.setPosition(0.05);
@@ -136,15 +168,15 @@ public class FinalTeleOp2 extends LinearOpMode {
             }
             if (shooterStartedLow == false && shooterStarted == false) {
                 m5.setVelocity(0);
-                m9.setPosition(0.22);
+                m9.setPosition(0.5);
             }
 
             // code for intake and belt
-            if (gamepad2.right_trigger > 0.1) {
-                m6.setPower(gamepad2.right_trigger * -1);
-                m8.setPower(-1);
-            } else if (gamepad2.left_trigger > 0.1) {
-                m6.setPower(gamepad2.left_trigger);
+            if (gamepad1.right_trigger > 0.1) {
+                m6.setPower(-1);
+                m8.setPower(-0.8);
+            } else if (gamepad1.left_trigger > 0.1) {
+                m6.setPower(gamepad1.left_trigger);
             } else {
                 m6.setPower(0);
                 m8.setPower(0);
@@ -205,16 +237,39 @@ public class FinalTeleOp2 extends LinearOpMode {
                 m10.setPosition(1);
             }
 
+            if (gamepad1.b) {
+                if (getHeading(AngleUnit.DEGREES) >= -3.5) {
+                    setPower(0,0,-0.2);
+                }
+            }
+
+            if (gamepad1.a) {
+                if (getHeading(AngleUnit.DEGREES) >= -9.5) {
+                    setPower(0,0,-0.2);
+                }
+            }
+
             // code for belt outtake
-            if (gamepad2.dpad_left == true) {
+            if (gamepad1.dpad_left == true) {
                 m8.setPower(1);
+            }
+
+            if (gamepad1.right_bumper) {
+                m8.setPower(1);
+                sleep(100);
+            }
+
+            if (gamepad1.left_bumper) {
+                m8.setPower(1);
+                sleep(100);
+
             }
 
             // telemetry data adding and updating
             telemetry.addData("Encoders"," %d %d %d %d", m1.getCurrentPosition(), m2.getCurrentPosition(), m3.getCurrentPosition(), m4.getCurrentPosition());
             telemetry.addData("shooter ", m5.getVelocity());
             telemetry.addData("gate: ", m9.getPosition());
-            telemetry.addData("intake: ", m6.getPower());
+            telemetry.addData("imu: ", getHeading(AngleUnit.DEGREES));
             telemetry.addData("belt: ", m8.getPower());
             telemetry.addData("arm: ", m7.getCurrentPosition());
             telemetry.addData("arm gate:", m10.getPosition());
@@ -232,6 +287,30 @@ public class FinalTeleOp2 extends LinearOpMode {
         m7.setPower(0);
         m8.setPower(0);
 
+    }
+
+    private double GetTurnedAngle(double currentHeading, double startHeading)
+    {
+        double LeftAngle = 0;
+        if (currentHeading < startHeading) {
+            LeftAngle = 360 - (startHeading - currentHeading);
+        } else {
+            LeftAngle = currentHeading - startHeading;
+        }
+        return LeftAngle;
+    }
+
+    public double getHeading(AngleUnit angleUnit) {
+        Orientation angles;
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, angleUnit);
+        return angles.firstAngle;
+    }
+
+    void setPower(double x, double y, double rx) {
+        m1.setPower(y - x + rx);
+        m2.setPower(y + x + rx);
+        m3.setPower(y - x - rx);
+        m4.setPower(y + x - rx);
     }
 
 }
