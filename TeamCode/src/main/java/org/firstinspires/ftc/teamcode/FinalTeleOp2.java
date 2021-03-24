@@ -111,6 +111,7 @@ public class FinalTeleOp2 extends LinearOpMode {
         telemetry.addData("arm gate:", m10.getPosition());
         telemetry.update();
 
+
         waitForStart();
 
         // opmode code
@@ -168,7 +169,7 @@ public class FinalTeleOp2 extends LinearOpMode {
             }
             if (shooterStartedLow == false && shooterStarted == false) {
                 m5.setVelocity(0);
-                m9.setPosition(0.5);
+                m9.setPosition(1);
             }
 
             // code for intake and belt
@@ -238,14 +239,14 @@ public class FinalTeleOp2 extends LinearOpMode {
             }
 
             if (gamepad1.b) {
-                if (getHeading(AngleUnit.DEGREES) >= -3.5) {
+                if (getHeading(AngleUnit.DEGREES) >= -8) {
                     setPower(0,0,-0.2);
                 }
             }
 
             if (gamepad1.a) {
-                if (getHeading(AngleUnit.DEGREES) >= -9.5) {
-                    setPower(0,0,-0.2);
+                if (getHeading(AngleUnit.DEGREES) <= -7) {
+                    setPower(0,0,0.2);
                 }
             }
 
@@ -263,6 +264,15 @@ public class FinalTeleOp2 extends LinearOpMode {
                 m8.setPower(1);
                 sleep(100);
 
+            }
+
+            if (gamepad1.x) {
+                if (getHeading(AngleUnit.DEGREES) > 0) {
+                    setPower(0,0,-0.2);
+                }
+                if (getHeading(AngleUnit.DEGREES) < 0) {
+                    setPower(0,0,0.2);
+                }
             }
 
             // telemetry data adding and updating

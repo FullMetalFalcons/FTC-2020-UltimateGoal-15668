@@ -76,7 +76,7 @@ public class EmergencyBackup extends  LinearOpMode {
         imu.initialize(parameters);
         Orientation orientation;
 
-        m9.setPosition(0.5);
+        m9.setPosition(1);
         m10.setPosition(1);
 
         waitForStart();
@@ -124,9 +124,13 @@ public class EmergencyBackup extends  LinearOpMode {
         sleep(100);
 
         setPower(0.2,0,0);
+        m9.setPosition(1);
         sleep(3500);
 
         driveToValueE(-0.2, -600);
+        m9.setPosition(1);
+        sleep(1000);
+
 
         //commands to run in auto ends
 
