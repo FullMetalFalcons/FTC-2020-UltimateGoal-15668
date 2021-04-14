@@ -98,7 +98,8 @@ public class TensorFlowFinal extends LinearOpMode {
         imu.initialize(parameters);
         Orientation orientation;
 
-        m9.setPosition(0.4);
+        m9.setPosition(1);
+        m10.setPosition(1);
 
         String understood = "";
 
@@ -170,21 +171,26 @@ public class TensorFlowFinal extends LinearOpMode {
             driveToValueE(-0.25, -2100);
 
             shooterRun(1400,3500);
-            m5.setPower(0);
+            m6.setPower(0);
+            m5.setVelocity(0);
+            m8.setPower(0);
+
+
+            driveToValueE(-0.2, -1700);
+            sleep(1000);
+            driveToValueE(0.2, 1500);
+
 
             setPower(0, 0, -0.5f);
             while (opModeIsActive()){
                 orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                if (orientation.firstAngle <= -118) break;
+                if (orientation.firstAngle <= -123) break;
             }
             setPower(0, 0, 0);
             sleep(100);
 
             driveToValueE(0.2, 1800);
 
-            m6.setPower(0);
-            m5.setVelocity(0);
-            m8.setPower(0);
 
             m7.setTargetPosition(1050);
             m7.setPower(0.25);
@@ -204,7 +210,9 @@ public class TensorFlowFinal extends LinearOpMode {
             driveToValueE(-0.25, -2100);
 
             shooterRun(1400,3500);
-            m5.setPower(0);
+            m6.setPower(0);
+            m5.setVelocity(0);
+            m8.setPower(0);
 
             setPower(0, 0, -0.5f);
             while (opModeIsActive()){
@@ -216,9 +224,6 @@ public class TensorFlowFinal extends LinearOpMode {
 
             driveToValueE(0.2, 600);
 
-            m6.setPower(0);
-            m5.setVelocity(0);
-            m8.setPower(0);
 
             m7.setTargetPosition(1050);
             m7.setPower(0.25);
@@ -238,7 +243,6 @@ public class TensorFlowFinal extends LinearOpMode {
             driveToValueE(-0.25, -2100);
 
             shooterRun(1400,3500);
-            m5.setPower(0);
             m6.setPower(0);
             m5.setVelocity(0);
             m8.setPower(0);
@@ -253,7 +257,7 @@ public class TensorFlowFinal extends LinearOpMode {
             setPower(0, 0, 0);
             sleep(100);
 
-            driveToValueE(0.2, 300);
+            driveToValueE(0.2, 350);
 
             m7.setTargetPosition(1050);
             m7.setPower(0.25);
@@ -266,7 +270,7 @@ public class TensorFlowFinal extends LinearOpMode {
             m10.setPosition(1);
             sleep(200);
 
-            driveToValueE(-0.2, -300);
+            driveToValueE(-0.2, -400);
 
         }
 
@@ -354,9 +358,11 @@ public class TensorFlowFinal extends LinearOpMode {
         while (m5.getVelocity() <= rpm - 10) {
             m5.setVelocity(rpm);
             m9.setPosition(0.22);
+            m6.setPower(-1);
         }
         while (m5.getVelocity() >= rpm - 10) {
             m9.setPosition(0.05);
+            m6.setPower(-1);
         }
         sleep(200);
         m8.setPower(-0.8);

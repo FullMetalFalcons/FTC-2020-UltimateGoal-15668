@@ -101,6 +101,7 @@ public class FinalTeleOp2 extends LinearOpMode {
         boolean armDrop = false;
         boolean xPressed = false;
 
+
         // start telemetry
         telemetry.addData("Encoders"," %d %d %d %d", m1.getCurrentPosition(), m2.getCurrentPosition(), m3.getCurrentPosition(), m4.getCurrentPosition());
         telemetry.addData("shooter ", m5.getVelocity());
@@ -238,18 +239,6 @@ public class FinalTeleOp2 extends LinearOpMode {
                 m10.setPosition(1);
             }
 
-            if (gamepad1.b) {
-                if (getHeading(AngleUnit.DEGREES) >= -8) {
-                    setPower(0,0,-0.2);
-                }
-            }
-
-            if (gamepad1.a) {
-                if (getHeading(AngleUnit.DEGREES) <= -7) {
-                    setPower(0,0,0.2);
-                }
-            }
-
             // code for belt outtake
             if (gamepad1.dpad_left == true) {
                 m8.setPower(1);
@@ -259,20 +248,18 @@ public class FinalTeleOp2 extends LinearOpMode {
                 m8.setPower(1);
                 sleep(100);
             }
-
             if (gamepad1.left_bumper) {
                 m8.setPower(1);
                 sleep(100);
-
             }
 
-            if (gamepad1.x) {
-                if (getHeading(AngleUnit.DEGREES) > 0) {
-                    setPower(0,0,-0.2);
-                }
-                if (getHeading(AngleUnit.DEGREES) < 0) {
-                    setPower(0,0,0.2);
-                }
+            if (gamepad1.b) {
+                setPower(-0.2,0,0);
+                sleep(880);
+                setPower(0,0,0);
+                sleep(100);
+                setPower(0,0,0.2);
+                sleep(85);
             }
 
             // telemetry data adding and updating
@@ -321,6 +308,21 @@ public class FinalTeleOp2 extends LinearOpMode {
         m2.setPower(y + x + rx);
         m3.setPower(y - x - rx);
         m4.setPower(y + x - rx);
+    }
+
+    void resetEncValuesEnc() {
+        m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m4.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m1.setPower(0);
+        m2.setPower(0);
+        m3.setPower(0);
+        m4.setPower(0);
+        m1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m4.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 }
