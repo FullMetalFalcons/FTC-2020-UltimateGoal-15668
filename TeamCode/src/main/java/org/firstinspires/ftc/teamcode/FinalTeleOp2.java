@@ -162,7 +162,7 @@ public class FinalTeleOp2 extends LinearOpMode {
             }
             if (shooterStartedLow == true) {
                 shooterStarted = false;
-                double lowpower = 1275;
+                double lowpower = 1245;
                 m5.setVelocity(lowpower);
                 if (m5.getVelocity() >= lowpower - 10) {
                     m9.setPosition(0.05);

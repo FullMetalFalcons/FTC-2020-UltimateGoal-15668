@@ -217,13 +217,12 @@ public class TensorFlowFinal extends LinearOpMode {
             setPower(0, 0, -0.5f);
             while (opModeIsActive()){
                 orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                if (orientation.firstAngle <= -140) break;
+                if (orientation.firstAngle <= -132) break;
             }
             setPower(0, 0, 0);
             sleep(100);
 
             driveToValueE(0.2, 600);
-
 
             m7.setTargetPosition(1050);
             m7.setPower(0.25);
